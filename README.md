@@ -11,7 +11,7 @@ Currently this can be used to check for updates from a given `instances` folder.
 
 ## Usage
 
-One can utilize the program by locating the absolute path to the `instance` folder. Check out the [releases](https://github.com/Hextical/updater/releases) tab for a binary.
+One can utilize the program by locating the absolute path to the `instance` folder. Check out the releases tab for a binary.
 
 Example command-line usage:
 `
