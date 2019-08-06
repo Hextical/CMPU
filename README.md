@@ -15,15 +15,16 @@ One can utilize the program by locating the absolute path to the `instance` fold
 
 Example command-line usage:
 `
-cmpu -d "C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft" "1.12.2"
+CMPU -d "C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft" "1.12.2"
 `
 To see all possible commands use:
 `
-cmpu -help
+CMPU -help
 `
 
 ## Building
 Navigate to directory and run `go build`.
-Requirements:
+
+## Requirements
 - [fasthttp](https://github.com/valyala/fasthttp)
 - [jsonparser](https://github.com/buger/jsonparser)
