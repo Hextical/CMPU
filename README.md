@@ -1,2 +1,29 @@
-# CMPU
- Extremely fast MC modpack updater + more
+# CMPU (_Curse ModPack Utilities_)
+
+**EXTREMELY BETA**
+
+Please report any issues to the issues tab with a log of what commands you used and the output. 
+
+This is my first time ever using Go and I'm not even a CS student or anything so suggestions and enhancements are greatly appreciated.
+
+This is a rewrite of my old [updater](https://github.com/Hextical/updater-java/).
+Currently this can be used to check for updates from a given `instances` folder. Only works with CurseForge mods right now.
+
+## Usage
+
+One can utilize the program by locating the absolute path to the `instance` folder. Check out the [releases](https://github.com/Hextical/updater/releases) tab for a binary.
+
+Example command-line usage:
+`
+cmpu -d "C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft" "1.12.2"
+`
+To see all possible commands use:
+`
+cmpu -help
+`
+
+## Building
+Navigate to directory and run `go build`.
+Requirements:
+- [fasthttp](https://github.com/valyala/fasthttp)
+- [jsonparser](https://github.com/buger/jsonparser)

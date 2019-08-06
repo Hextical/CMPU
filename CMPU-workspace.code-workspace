@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"files.autoSave": "afterDelay",
+		"files.autoSaveDelay": 1000,
+		"workbench.colorTheme": "Dracula",
+		"go.lintTool": "golangci-lint",
+		"go.autocompleteUnimportedPackages": true,
+		"go.useCodeSnippetsOnFunctionSuggestWithoutType": true,
+		"go.lintOnSave": "workspace",
+	}
+}
