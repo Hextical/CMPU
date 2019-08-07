@@ -50,12 +50,20 @@ func runArgs() {
 
 	mcDir := flag.String("d", "./", "Absolute path to Minecraft instance folder.")
 	USER_VERSION = flag.String("version", "1.12.2", "Game version of located mods.")
+
+	EXPORT_NEW := flag.String("export", "false", "Creation of new manifest.json")
+	EXPORT_PATH := flag.String("export-path", "./", "Path of manifest.json")
+
 	flag.Parse()
 
 	err := readMCDIR(*mcDir)
 
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	if *EXPORT_NEW == "true" {
+		readExport(*EXPORT_PATH)
 	}
 
 	checkUpdates(oldMap, newMap)
