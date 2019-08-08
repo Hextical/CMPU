@@ -17,6 +17,11 @@ Example command-line usage:
 `
 CMPU -d "C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft" "1.12.2"
 `
+Full usage so far (checks for updates, then exports both the old and new manifest)
+`
+CMPU -d "C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft" "1.12.2" -export-new true -export-old true -manifest C:\Users\hexii\Desktop\export.json
+`
+This will generate two files: an old.json and a manifest.json file within the execution directory.
 To see all possible commands use:
 `
 CMPU -help
