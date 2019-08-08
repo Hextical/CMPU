@@ -17,14 +17,14 @@ var (
 	jarFingerprints []int               // Contains 32-bit MurmurHash2 of each .jar
 	oldMap          map[string][]string // Old mods map
 	newMap          map[string][]string // New mods map
+	externalMods    []string            // Mods that cannot be found on CurseForge
 	USER_VERSION    *string             // Specified game version
 	currentTime     time.Time           // Current time
 	downloadPath    *string             // Path for new .jar files
 )
 
 func main() {
-	getTime()
-	runArgs()
+	run()
 }
 
 // getTime gets the current time and stores it into currentTime as a
@@ -48,7 +48,7 @@ func getTime() {
 
 }
 
-func runArgs() {
+func run() {
 
 	mcDir := flag.String("d", "./", "Absolute path to Minecraft instance folder.")
 	USER_VERSION = flag.String("version", "1.12.2", "Game version of located mods.")
@@ -57,10 +57,17 @@ func runArgs() {
 	EXPORT_OLD := flag.Bool("export-old", false, "Creation of old manifest.json")
 	EXPORT_PATH := flag.String("manifest", "./", "Absolute path of manifest.json")
 
+	silentMode := flag.Bool("s", false, "Silent mode.")
+
 	downloadPath = flag.String("download", "./", "Path of where to download .jar file")
 
 	flag.Parse()
 
+	if *silentMode {
+		log.SetOutput(ioutil.Discard)
+	}
+
+	getTime()
 	err := readMCDIR(*mcDir)
 
 	if err != nil {

@@ -32,6 +32,7 @@ If no value for an argument is specified it will use the default.
 - `-export-old=<boolean>` | if an old manifest should be generated | `false`
 - `-manifest <path>` | path to export.json | `./`
 - `-download <path>` | path for downloading updates; it will create a folder if it does not exist | `./`
+- `-s=<boolean>` | silent mode; no output for CLI | `false`
 
 `export.json`:
 

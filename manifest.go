@@ -17,6 +17,8 @@ func readExport(EXPORT_PATH string, manifestType string) {
 
 	if err != nil {
 		log.Println(err)
+		log.Println("***WARNING: export.json is missing, either fill in the json manually",
+			"or retry with a correct export.json***")
 	}
 
 	json := readExportJSON(export)
