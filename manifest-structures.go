@@ -1,12 +1,19 @@
 package main
 
-type File struct {
-	Minecraft       Minecraft `json:"minecraft"`
-	ManifestType    string    `json:"manifestType"`
-	ManifestVersion int       `json:"manifestVersion"`
-	Name            string    `json:"name"`
-	Version         string    `json:"version"`
-	Author          string    `json:"author"`
+type Manifest struct {
+	Minecraft       Minecraft  `json:"minecraft"`
+	ManifestType    string     `json:"manifestType"`
+	ManifestVersion int        `json:"manifestVersion"`
+	Name            string     `json:"name"`
+	Version         string     `json:"version"`
+	Author          string     `json:"author"`
+	Files           []CurrFile `json:"files"`
+}
+
+type CurrFile struct {
+	ProjectID string `json:"projectID"`
+	FileID    string `json:"fileID"`
+	Required  bool   `json:"required"`
 }
 
 type Minecraft struct {

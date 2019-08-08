@@ -49,9 +49,9 @@ func parseOldJSON(body []byte) (string, []string) {
 func parseNewJSON(file []byte) []string {
 
 	paths := [][]string{
-		[]string{"id"},          // fileID
 		[]string{"fileName"},    // fileName
 		[]string{"downloadUrl"}, // downloadURL
+		[]string{"id"},          // fileID
 	}
 
 	var fileName, downloadURL, fileID string
@@ -103,6 +103,7 @@ func findBestFile(body []byte) []byte {
 			log.Println("gameVersion array does not exist.")
 		}
 
+		// Determine if the object needs to be checked, if it does then it is parsed
 		if currentVersionExists(versions) {
 
 			fileDate_str, _ := jsonparser.GetString(file, "fileDate")

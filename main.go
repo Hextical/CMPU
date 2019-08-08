@@ -51,8 +51,9 @@ func runArgs() {
 	mcDir := flag.String("d", "./", "Absolute path to Minecraft instance folder.")
 	USER_VERSION = flag.String("version", "1.12.2", "Game version of located mods.")
 
-	EXPORT_NEW := flag.String("export", "false", "Creation of new manifest.json")
-	EXPORT_PATH := flag.String("export-path", "./", "Path of manifest.json")
+	EXPORT_NEW := flag.String("export-new", "false", "Creation of new manifest.json")
+	EXPORT_OLD := flag.String("export-old", "false", "Creation of old manifest.json")
+	EXPORT_PATH := flag.String("manifest", "./", "Absolute path of manifest.json")
 
 	flag.Parse()
 
@@ -62,8 +63,12 @@ func runArgs() {
 		log.Fatal(err)
 	}
 
+	if *EXPORT_OLD == "true" {
+		readExport(*EXPORT_PATH, "old")
+	}
+
 	if *EXPORT_NEW == "true" {
-		readExport(*EXPORT_PATH)
+		readExport(*EXPORT_PATH, "new")
 	}
 
 	checkUpdates(oldMap, newMap)
@@ -121,9 +126,9 @@ func checkUpdates(oldMap map[string][]string, newMap map[string][]string) {
 
 	for key, value := range oldMap {
 		fileID_OLD := value[2]
-		fileID_NEW := newMap[key][0]
+		fileID_NEW := newMap[key][2]
 		if fileID_OLD != fileID_NEW {
-			log.Println(value)
+			log.Println(newMap[key])
 		}
 	}
 

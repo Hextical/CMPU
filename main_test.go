@@ -37,7 +37,7 @@ func TestExport(t *testing.T) {
 	EXPORT_PATH := &EXPORT_PATH_STR
 
 	if *EXPORT_NEW == "true" {
-		readExport(*EXPORT_PATH)
+		readExport(*EXPORT_PATH, "new")
 
 	}
 

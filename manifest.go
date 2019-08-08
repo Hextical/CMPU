@@ -9,9 +9,9 @@ import (
 	"github.com/buger/jsonparser"
 )
 
-func readExport(EXPORT_PATH string) {
+func readExport(EXPORT_PATH string, manifestType string) {
 
-	log.Println("Reading export json...")
+	log.Println("Reading export.json...")
 
 	export, err := ioutil.ReadFile(EXPORT_PATH)
 
@@ -20,9 +20,14 @@ func readExport(EXPORT_PATH string) {
 	}
 
 	json := readExportJSON(export)
-	manifest(json)
 
-	log.Println("Reading export json completed.")
+	if manifestType == "old" {
+		manifest(json, oldMap, manifestType)
+	} else {
+		manifest(json, newMap, manifestType)
+	}
+
+	log.Println("Reading export.json completed.")
 
 }
 
@@ -62,13 +67,19 @@ func readExportJSON(file []byte) ExportJSON {
 		}
 	}, paths...)
 
-	// yeah this is kinda bad since I'm returning the whole structure
 	return json
 
 }
 
-func manifest(exportjson ExportJSON) {
-	data := File{
+func manifest(exportjson ExportJSON, x_map map[string][]string, manifestType string) {
+
+	var moddedFiles []CurrFile
+
+	for key, value := range x_map {
+		moddedFiles = append(moddedFiles, CurrFile{key, value[2], true})
+	}
+
+	data := Manifest{
 		Minecraft: Minecraft{
 			Version: *USER_VERSION,
 			ModLoaders: []ModLoaders{
@@ -83,10 +94,15 @@ func manifest(exportjson ExportJSON) {
 		Name:            exportjson.PackName,
 		Version:         exportjson.PackVersion,
 		Author:          exportjson.PackAuthors,
+		Files:           moddedFiles,
 	}
 
 	file, _ := json.MarshalIndent(data, "", "  ")
 
-	_ = ioutil.WriteFile("test.json", file, 0644)
+	if manifestType == "old" {
+		_ = ioutil.WriteFile("old.json", file, 0644)
+	} else {
+		_ = ioutil.WriteFile("manifest.json", file, 0644)
+	}
 
 }
