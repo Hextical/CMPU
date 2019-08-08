@@ -16,6 +16,10 @@ Full CLI usage so far:
 CMPU -d C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft -version 1.12.2 -export-new=true -export-old=true -manifest C:\Users\hexii\Desktop\export.json -download C:\Users\hexii\Desktop\CMPU-Downloads
 `
 
+**Recommended: USE QUOTES FOR PATHS, ESPECIALLY IF IT CONTAINS SPACES**
+
+Example: `CMPU -d C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft` turns into `CMPU -d "C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft"`
+
 Explanation:
 
 Argument | What it does | Default value
@@ -26,8 +30,8 @@ If no value for an argument is specified it will use the default.
 - `-version <gameversion> ` | game version | `1.12.2`
 - `-export-new=<boolean>` | if an updated manifest should be generated | `false`
 - `-export-old=<boolean>` | if an old manifest should be generated | `false`
-- `-manifest<path>` | path to export.json | `./`
-- `-download<path>` | path for updates; it will create a folder if it does not exist | `./`
+- `-manifest <path>` | path to export.json | `./`
+- `-download <path>` | path for downloading updates; it will create a folder if it does not exist | `./`
 
 `export.json`:
 
