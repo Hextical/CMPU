@@ -77,7 +77,7 @@ func parseNewJSON(file []byte) []string {
 // Useful for findBestFile in filtering out unnecessary objects.
 func currentVersionExists(versions []string) bool {
 	for i := range versions {
-		if versions[i] == *USER_VERSION {
+		if versions[i] == *gameVersion {
 			return true
 		}
 	}

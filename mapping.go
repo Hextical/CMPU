@@ -5,12 +5,12 @@ import (
 	"sync"
 )
 
-func createMaps(jarFingerprints []int) {
+func createMaps(jarFingerprints map[int]string) {
 	createOldMap(jarFingerprints)
 	createNewMap(oldMap)
 }
 
-func createOldMap(jarFingerprints []int) {
+func createOldMap(jarFingerprints map[int]string) {
 
 	log.Println("Creating old map...")
 
@@ -19,16 +19,16 @@ func createOldMap(jarFingerprints []int) {
 	var mutex sync.Mutex
 	var wg sync.WaitGroup
 
-	for i := range jarFingerprints {
+	for key := range jarFingerprints {
 		wg.Add(1)
-		go func(wg *sync.WaitGroup, i int) {
+		go func(wg *sync.WaitGroup, key int) {
 			defer wg.Done()
-			tempBody := connectWithHash(jarFingerprints[i])
+			tempBody := connectWithHash(key)
 			projID, attributes := parseOldJSON(tempBody)
 			mutex.Lock()
 			oldMap[projID] = attributes
 			mutex.Unlock()
-		}(&wg, i)
+		}(&wg, key)
 	}
 
 	wg.Wait()

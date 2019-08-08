@@ -83,7 +83,7 @@ func manifest(exportjson ExportJSON, x_map map[string][]string, manifestType str
 
 	data := Manifest{
 		Minecraft: Minecraft{
-			Version: *USER_VERSION,
+			Version: *gameVersion,
 			ModLoaders: []ModLoaders{
 				ModLoaders{
 					Id:      exportjson.Modloader + "-" + exportjson.ModloaderVersion,

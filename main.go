@@ -12,19 +12,78 @@ import (
 	"time"
 )
 
+// API URL
+// For more documentation on the API visit: https://twitchappapi.docs.apiary.io/
+const API = "https://addons-ecs.forgesvc.net/api/v2/"
+
 // Globals
 var (
-	jarFingerprints []int               // Contains 32-bit MurmurHash2 of each .jar
+	jarFingerprints map[int]string      // Contains 32-bit MurmurHash2 of each .jar and the fileName
 	oldMap          map[string][]string // Old mods map
 	newMap          map[string][]string // New mods map
-	externalMods    []string            // Mods that cannot be found on CurseForge
-	USER_VERSION    *string             // Specified game version
-	currentTime     time.Time           // Current time
-	downloadPath    *string             // Path for new .jar files
+	//externalMods    []string            // Mods that cannot be found on CurseForge
+	currentTime time.Time // Current time
+)
+
+// Command line Arguments
+var (
+	instancePath       *string // Path to instance folder
+	gameVersion        *string // Specified game version
+	downloadPath       *string // Path for new .jar files
+	exportNewManifest  *bool   // Export manifest.json
+	exportOldManifest  *bool   // Export oldmanifest.json
+	exportManifestPath *string // Path to export.json
+	silentMode         *bool   // Silent mode
 )
 
 func main() {
-	run()
+	parseArgs()
+	getTime()
+	readInstancePath()
+	useArgs()
+	checkUpdates(oldMap, newMap)
+}
+
+func parseArgs() {
+
+	instancePath = flag.String("d", "./", "Absolute path to Minecraft instance folder.")
+	gameVersion = flag.String("version", "1.12.2", "Game version of located mods.")
+	downloadPath = flag.String("download", "./", "Path of where to download .jar file")
+
+	exportNewManifest = flag.Bool("export-new", false, "Creation of new manifest.json")
+	exportOldManifest = flag.Bool("export-old", false, "Creation of old manifest.json")
+	exportManifestPath = flag.String("manifest", "./", "Absolute path of manifest.json")
+
+	silentMode = flag.Bool("s", false, "Silent mode.")
+
+	flag.Parse()
+
+}
+
+func useArgs() {
+
+	if *exportNewManifest {
+		readExport(*exportManifestPath, "new")
+	}
+
+	if *exportOldManifest {
+		readExport(*exportManifestPath, "old")
+	}
+
+	if *silentMode {
+		log.SetOutput(ioutil.Discard)
+	}
+
+}
+
+func readInstancePath() {
+
+	err := readMCDIR(*instancePath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }
 
 // getTime gets the current time and stores it into currentTime as a
@@ -48,49 +107,11 @@ func getTime() {
 
 }
 
-func run() {
-
-	mcDir := flag.String("d", "./", "Absolute path to Minecraft instance folder.")
-	USER_VERSION = flag.String("version", "1.12.2", "Game version of located mods.")
-
-	EXPORT_NEW := flag.Bool("export-new", false, "Creation of new manifest.json")
-	EXPORT_OLD := flag.Bool("export-old", false, "Creation of old manifest.json")
-	EXPORT_PATH := flag.String("manifest", "./", "Absolute path of manifest.json")
-
-	silentMode := flag.Bool("s", false, "Silent mode.")
-
-	downloadPath = flag.String("download", "./", "Path of where to download .jar file")
-
-	flag.Parse()
-
-	if *silentMode {
-		log.SetOutput(ioutil.Discard)
-	}
-
-	getTime()
-	err := readMCDIR(*mcDir)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if *EXPORT_OLD {
-		readExport(*EXPORT_PATH, "old")
-	}
-
-	if *EXPORT_NEW {
-		readExport(*EXPORT_PATH, "new")
-	}
-
-	checkUpdates(oldMap, newMap)
-
-}
-
-func readMCDIR(dirPath string) error {
+func readMCDIR(path string) error {
 
 	log.Println("Reading Minecraft directory...")
 
-	files, err := ioutil.ReadDir(dirPath)
+	files, err := ioutil.ReadDir(path)
 
 	if err != nil {
 		log.Println("Cannot read directory.")
@@ -100,7 +121,7 @@ func readMCDIR(dirPath string) error {
 	for _, f := range files {
 		if strings.ToLower(f.Name()) == "mods" {
 			log.Println("Reading Minecraft directory completed.")
-			listMods(dirPath)
+			listMods(path)
 			return nil
 		}
 	}
@@ -120,10 +141,14 @@ func listMods(modsFolder string) {
 		log.Fatal(err)
 	}
 
+	jarFingerprints = make(map[int]string)
+
+	// Can utilize goroutine here possibly
 	for _, f := range files {
-		if filepath.Ext(f.Name()) == ".jar" {
-			fileHash, _ := GetFileHash(path.Join(modsFolder, "mods", f.Name()))
-			jarFingerprints = append(jarFingerprints, fileHash)
+		fileName := f.Name()
+		if filepath.Ext(fileName) == ".jar" {
+			fileHash, _ := GetFileHash(path.Join(modsFolder, "mods", fileName))
+			jarFingerprints[fileHash] = fileName
 		}
 	}
 

@@ -11,8 +11,6 @@ import (
 	"strconv"
 )
 
-var api = "https://addons-ecs.forgesvc.net/api/v2/"
-
 func readResponse(resp *http.Response, err error) []byte {
 
 	if err != nil {
@@ -33,12 +31,12 @@ func readResponse(resp *http.Response, err error) []byte {
 
 func connectWithHash(jarFingerprint int) []byte {
 	requestbody := []byte("[" + strconv.Itoa(jarFingerprint) + "]")
-	resp, err := http.Post(api+"fingerprint", "application/json", bytes.NewBuffer(requestbody))
+	resp, err := http.Post(API+"fingerprint", "application/json", bytes.NewBuffer(requestbody))
 	return readResponse(resp, err)
 }
 
 func connectWithProjectID(projectID string) []byte {
-	resp, err := http.Get(api + "addon/" + projectID + "/files")
+	resp, err := http.Get(API + "addon/" + projectID + "/files")
 	return readResponse(resp, err)
 }
 
