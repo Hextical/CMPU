@@ -10,22 +10,39 @@ Note: This project is a rewrite of my old [updater](https://github.com/Hextical/
 Currently this can be used to check for updates from a given `instances` folder. Only works with CurseForge mods right now.
 
 ## Usage
-
-One can utilize the program by locating the absolute path to the `instance` folder. Check out the releases tab for a binary.
-
-Example command-line usage:
+Full CLI usage so far:
 
 `
-CMPU -d "C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft" "1.12.2"
+CMPU -d C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft -version 1.12.2 -export-new=true -export-old=true -manifest C:\Users\hexii\Desktop\export.json -download C:\Users\hexii\Desktop\CMPU-Downloads
 `
 
-Full usage so far (checks for updates, then exports both the old and new manifest json files)
+Explanation:
 
-`
-CMPU -d "C:\Users\hexii\Documents\MultiMC\instances\1.12.2\.minecraft" "1.12.2" -export-new true -export-old true -manifest C:\Users\hexii\Desktop\export.json
-`
+Argument | What it does | Default value
 
-This will generate two files: an old.json and a manifest.json file within the execution directory.
+If no value for an argument is specified it will use the default.
+
+- `-d <path> ` | instance folder | `./`
+- `-version <gameversion> ` | game version | `1.12.2`
+- `-export-new=<boolean>` | if an updated manifest should be generated | `false`
+- `-export-old=<boolean>` | if an old manifest should be generated | `false`
+- `-manifest<path>` | path to export.json | `./`
+- `-download<path>` | path for updates; it will create a folder if it does not exist | `./`
+
+`export.json`:
+
+``` json
+{
+    "MinecraftVersion": "1.12.2",
+    "Modloader": "forge",
+    "ModloaderVersion": "14.23.5.2838",
+    "ManifestType": "minecraftModpack",
+    "ManifestVersion": 1,
+    "PackName": "Example Pack",
+    "PackVersion": "1.0.0",
+    "PackAuthors": "author1, author2"
+}
+```
 
 To see all possible commands use:
 
@@ -37,11 +54,8 @@ CMPU -help
 Navigate to directory and run `go build`.
 
 ## Requirements
-- [fasthttp](https://github.com/valyala/fasthttp)
 - [jsonparser](https://github.com/buger/jsonparser)
 
 ## Planned features
-- Exporting a manifest file so one can utilize the [ChangelogGenerator](https://github.com/TheRandomLabs/ChangelogGenerator)
-- Creating my own ChangelogGenerator
+- Creating my own [ChangelogGenerator](https://github.com/TheRandomLabs/ChangelogGenerator)
 - Exporting a complete modpack (yes it's been done before)
-- Downloading the updates

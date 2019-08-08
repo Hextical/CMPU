@@ -5,6 +5,7 @@ import (
 	"flag"
 	"io/ioutil"
 	"log"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -18,6 +19,7 @@ var (
 	newMap          map[string][]string // New mods map
 	USER_VERSION    *string             // Specified game version
 	currentTime     time.Time           // Current time
+	downloadPath    *string             // Path for new .jar files
 )
 
 func main() {
@@ -51,9 +53,11 @@ func runArgs() {
 	mcDir := flag.String("d", "./", "Absolute path to Minecraft instance folder.")
 	USER_VERSION = flag.String("version", "1.12.2", "Game version of located mods.")
 
-	EXPORT_NEW := flag.String("export-new", "false", "Creation of new manifest.json")
-	EXPORT_OLD := flag.String("export-old", "false", "Creation of old manifest.json")
+	EXPORT_NEW := flag.Bool("export-new", false, "Creation of new manifest.json")
+	EXPORT_OLD := flag.Bool("export-old", false, "Creation of old manifest.json")
 	EXPORT_PATH := flag.String("manifest", "./", "Absolute path of manifest.json")
+
+	downloadPath = flag.String("download", "./", "Path of where to download .jar file")
 
 	flag.Parse()
 
@@ -63,11 +67,11 @@ func runArgs() {
 		log.Fatal(err)
 	}
 
-	if *EXPORT_OLD == "true" {
+	if *EXPORT_OLD {
 		readExport(*EXPORT_PATH, "old")
 	}
 
-	if *EXPORT_NEW == "true" {
+	if *EXPORT_NEW {
 		readExport(*EXPORT_PATH, "new")
 	}
 
@@ -124,12 +128,44 @@ func listMods(modsFolder string) {
 
 func checkUpdates(oldMap map[string][]string, newMap map[string][]string) {
 
-	for key, value := range oldMap {
-		fileID_OLD := value[2]
-		fileID_NEW := newMap[key][2]
-		if fileID_OLD != fileID_NEW {
-			log.Println(newMap[key])
+	// Create the directory if downloads requested
+	if *downloadPath != "./" {
+
+		err := os.Mkdir(*downloadPath, os.ModePerm)
+
+		if err != nil {
+			log.Println(err)
+		}
+
+	}
+
+	log.Println("--- Updates ---")
+
+	var updates int
+
+	for key, value := range newMap {
+
+		if value[2] != oldMap[key][2] { // (new fileID) != (old fileID)
+
+			log.Printf("Name: %v | URL: %v | ID: %v", value[0], value[1], value[2])
+			updates++
+
+			// Actually download the files
+			if *downloadPath != "./" {
+
+				// Pass in the fileName and downloadUrl
+				err := DownloadFile(value[0], value[1])
+
+				if err != nil {
+					log.Println(err)
+				}
+
+			}
+
 		}
 	}
+
+	log.Println("--- End of updates ---")
+	log.Printf("* Available updates: %v *", updates)
 
 }
