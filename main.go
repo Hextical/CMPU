@@ -44,6 +44,7 @@ func main() {
 	checkUpdates(oldMap, newMap)
 }
 
+// Parse arguments specified in the CLI
 func parseArgs() {
 
 	instancePath = flag.String("d", "./", "Absolute path to Minecraft instance folder.")
@@ -57,32 +58,6 @@ func parseArgs() {
 	silentMode = flag.Bool("s", false, "Silent mode.")
 
 	flag.Parse()
-
-}
-
-func useArgs() {
-
-	if *exportNewManifest {
-		readExport(*exportManifestPath, "new")
-	}
-
-	if *exportOldManifest {
-		readExport(*exportManifestPath, "old")
-	}
-
-	if *silentMode {
-		log.SetOutput(ioutil.Discard)
-	}
-
-}
-
-func readInstancePath() {
-
-	err := readMCDIR(*instancePath)
-
-	if err != nil {
-		log.Fatal(err)
-	}
 
 }
 
@@ -107,7 +82,36 @@ func getTime() {
 
 }
 
-func readMCDIR(path string) error {
+// Determine if instance folder is valid & reads it
+func readInstancePath() {
+
+	err := readInstanceFolder(*instancePath)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+}
+
+// Use arguments specified in the CLI
+func useArgs() {
+
+	if *exportNewManifest {
+		readExport(*exportManifestPath, "new")
+	}
+
+	if *exportOldManifest {
+		readExport(*exportManifestPath, "old")
+	}
+
+	if *silentMode {
+		log.SetOutput(ioutil.Discard)
+	}
+
+}
+
+// Actually read the instance folder
+func readInstanceFolder(path string) error {
 
 	log.Println("Reading Minecraft directory...")
 
