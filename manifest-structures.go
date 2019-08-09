@@ -11,9 +11,9 @@ type Manifest struct {
 }
 
 type CurrFile struct {
-	ProjectID string `json:"projectID"`
-	FileID    string `json:"fileID"`
-	Required  bool   `json:"required"`
+	ProjectID int  `json:"projectID"`
+	FileID    int  `json:"fileID"`
+	Required  bool `json:"required"`
 }
 
 type Minecraft struct {

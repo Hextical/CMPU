@@ -78,7 +78,9 @@ func manifest(exportjson ExportJSON, x_map map[string][]string, manifestType str
 	var moddedFiles []CurrFile
 
 	for key, value := range x_map {
-		moddedFiles = append(moddedFiles, CurrFile{key, value[2], true})
+		keyInt, _ := strconv.Atoi(key)
+		valueInt, _ := strconv.Atoi(value[2])
+		moddedFiles = append(moddedFiles, CurrFile{keyInt, valueInt, true})
 	}
 
 	data := Manifest{
