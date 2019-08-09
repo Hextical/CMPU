@@ -17,6 +17,12 @@ func parseOldJSON(body []byte) (string, []string) {
 		[]string{"file", "id"},          // fileID
 	}
 
+	// Check if the mod was found on CurseForge
+	_, _, _, emptyerr := jsonparser.Get(body, "exactMatches", "[0]")
+	if emptyerr != nil {
+		return "", []string{"", "", ""}
+	}
+
 	var projectID, fileName, downloadURL, fileID string
 
 	// Traverse each element of exactMatches array

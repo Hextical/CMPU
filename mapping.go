@@ -19,16 +19,24 @@ func createOldMap(jarFingerprints map[int]string) {
 	var mutex sync.Mutex
 	var wg sync.WaitGroup
 
-	for key := range jarFingerprints {
+	for key, value := range jarFingerprints {
 		wg.Add(1)
-		go func(wg *sync.WaitGroup, key int) {
+		go func(wg *sync.WaitGroup, key int, value string) {
 			defer wg.Done()
 			tempBody := connectWithHash(key)
-			projID, attributes := parseOldJSON(tempBody)
-			mutex.Lock()
-			oldMap[projID] = attributes
-			mutex.Unlock()
-		}(&wg, key)
+			projectID, attributes := parseOldJSON(tempBody)
+
+			if projectID == "" { // Can't find a projectID -> Add to an external array
+				mutex.Lock()
+				externalMods = append(externalMods, value)
+				mutex.Unlock()
+			} else { // Otherwise set the key & value to the map
+				mutex.Lock()
+				oldMap[projectID] = attributes
+				mutex.Unlock()
+			}
+
+		}(&wg, key, value)
 	}
 
 	wg.Wait()

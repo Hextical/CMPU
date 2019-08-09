@@ -21,8 +21,8 @@ var (
 	jarFingerprints map[int]string      // Contains 32-bit MurmurHash2 of each .jar and the fileName
 	oldMap          map[string][]string // Old mods map
 	newMap          map[string][]string // New mods map
-	//externalMods    []string            // Mods that cannot be found on CurseForge
-	currentTime time.Time // Current time
+	externalMods    []string            // Mods that cannot be found on CurseForge
+	currentTime     time.Time           // Current time
 )
 
 // Command line Arguments
@@ -203,5 +203,7 @@ func checkUpdates(oldMap map[string][]string, newMap map[string][]string) {
 
 	log.Println("--- End of updates ---")
 	log.Printf("* Available updates: %v *", updates)
+
+	log.Printf("Mods that can't be found on CurseForge: %v", externalMods)
 
 }
