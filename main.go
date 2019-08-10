@@ -138,22 +138,19 @@ func listMods(modsFolder string) {
 
 	log.Print("Reading mods folder...")
 
-	files, err := ioutil.ReadDir(path.Join(modsFolder, "mods"))
-
-	if err != nil {
-		log.Println("Cannot read mods folder.")
-		log.Fatal(err)
-	}
-
 	jarFingerprints = make(map[int]string)
 
-	// Can utilize goroutine here possibly
-	for _, f := range files {
-		fileName := f.Name()
-		if filepath.Ext(fileName) == ".jar" {
-			fileHash, _ := GetFileHash(path.Join(modsFolder, "mods", fileName))
-			jarFingerprints[fileHash] = fileName
+	err := filepath.Walk(path.Join(modsFolder, "mods"), func(path string, info os.FileInfo, err error) error {
+		if filepath.Ext(info.Name()) == ".jar" {
+			fileHash, _ := GetFileHash(path)
+			jarFingerprints[fileHash] = info.Name()
 		}
+		return nil
+	})
+
+	if err != nil {
+		log.Println("Error searching through mods folder.")
+		log.Fatal(err)
 	}
 
 	log.Println("Reading mods folder completed.")
