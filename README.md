@@ -56,11 +56,7 @@ CMPU -help
 `
 
 ## Building
-Navigate to directory and run `go build`.
-
-## Requirements
-- [jsonparser](https://github.com/buger/jsonparser)
+Navigate to directory and run `go build`. Requires [jsonparser](https://github.com/buger/jsonparser) to be installed.
 
 ## Planned features
-- Creating my own [ChangelogGenerator](https://github.com/TheRandomLabs/ChangelogGenerator)
-- Exporting a complete modpack (yes it's been done before)
+- View the [projects tab](https://github.com/Hextical/CMPU/projects).
