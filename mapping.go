@@ -54,16 +54,22 @@ func createNewMap(oldMap map[string][]string) {
 	var mutex sync.Mutex
 	var wg sync.WaitGroup
 
-	for key := range oldMap {
+	for key, value := range oldMap {
 		wg.Add(1)
-		go func(wg *sync.WaitGroup, key string) {
+		go func(wg *sync.WaitGroup, key string, value []string) {
 			defer wg.Done()
 			tempBody := connectWithProjectID(key)
-			attributes := parseNewJSON(findBestFile(tempBody))
-			mutex.Lock()
-			newMap[key] = attributes
-			mutex.Unlock()
-		}(&wg, key)
+			if string(tempBody) == "[]" {
+				mutex.Lock()
+				externalMods = append(externalMods, value[0])
+				mutex.Unlock()
+			} else {
+				attributes := parseNewJSON(findBestFile(tempBody))
+				mutex.Lock()
+				newMap[key] = attributes
+				mutex.Unlock()
+			}
+		}(&wg, key, value)
 	}
 
 	wg.Wait()

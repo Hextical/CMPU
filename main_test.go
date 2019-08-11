@@ -4,6 +4,7 @@ import (
 	"testing"
 )
 
+/*
 func TestMain(t *testing.T) {
 
 	// This just sets the annoying stuff to default
@@ -16,28 +17,37 @@ func TestMain(t *testing.T) {
 	gameVersionStr := "1.12.2"
 	gameVersion = &gameVersionStr
 
-	downloadPath_str := "C:\\Users\\hexii\\Downloads\\CMPU-Downloads"
-	downloadPath = &downloadPath_str
+	//downloadPath_str := "C:\\Users\\hexii\\Downloads\\CMPU-Downloads"
+	//downloadPath = &downloadPath_str
 
 	getTime()
 	readInstancePath()
 	useArgs()
 	checkUpdates(oldMap, newMap)
 }
-
+*/
 func TestExportNewManifest(t *testing.T) {
 
-	gameVersionStr := "1.12.2"
+	parseArgs()
+
+	instancePathStr := "C:\\Users\\hexii\\Documents\\MultiMC\\instances\\FTB Infinity Evolved 1.7\\.minecraft"
+	instancePath = &instancePathStr
+
+	gameVersionStr := "1.7.10"
 	gameVersion = &gameVersionStr
 
 	exportNewManifestBool := true
-	exportNewManifest := &exportNewManifestBool
+	exportNewManifest = &exportNewManifestBool
+
+	exportOldManifestBool := true
+	exportOldManifest = &exportOldManifestBool
 
 	exportManifestPathStr := "C:\\Users\\hexii\\go\\src\\CMPU\\export.json"
-	exportManifestPath := &exportManifestPathStr
+	exportManifestPath = &exportManifestPathStr
 
-	if *exportNewManifest {
-		readExport(*exportManifestPath, "new")
-	}
+	getTime()
+	readInstancePath()
+	useArgs()
+	checkUpdates(oldMap, newMap)
 
 }
