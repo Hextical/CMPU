@@ -44,7 +44,6 @@ func main() {
 	getTime()
 
 	if *cliFlag {
-		parseArgs()
 		readInstancePath()
 		useArgs()
 		checkUpdates(oldMap, newMap)
