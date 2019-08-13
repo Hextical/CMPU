@@ -34,18 +34,35 @@ var (
 	exportOldManifest  *bool   // Export oldmanifest.json
 	exportManifestPath *string // Path to export.json
 	silentMode         *bool   // Silent mode
+	cliFlag            *bool   // Enable CLI
+	guiFlag            *bool   // Enable GUI
 )
 
 func main() {
+
 	parseArgs()
 	getTime()
-	readInstancePath()
-	useArgs()
-	checkUpdates(oldMap, newMap)
+
+	if *cliFlag {
+		parseArgs()
+		readInstancePath()
+		useArgs()
+		checkUpdates(oldMap, newMap)
+	}
+
+	if *guiFlag {
+		launchGUI()
+		readInstancePath()
+		useArgs()
+		checkUpdates(oldMap, newMap)
+	}
 }
 
 // Parse arguments specified in the CLI
 func parseArgs() {
+
+	cliFlag = flag.Bool("cli", false, "CLI. Must be followed up by arguments.")
+	guiFlag = flag.Bool("gui", false, "GUI. Standalone, don't bother using additional arguments.")
 
 	instancePath = flag.String("d", "./", "Absolute path to Minecraft instance folder.")
 	gameVersion = flag.String("version", "1.12.2", "Game version of located mods.")
@@ -53,7 +70,7 @@ func parseArgs() {
 
 	exportNewManifest = flag.Bool("export-new", false, "Creation of new manifest.json")
 	exportOldManifest = flag.Bool("export-old", false, "Creation of old manifest.json")
-	exportManifestPath = flag.String("manifest", "./", "Absolute path of manifest.json")
+	exportManifestPath = flag.String("manifest", "./", "Absolute path of export.json")
 
 	silentMode = flag.Bool("s", false, "Silent mode.")
 
