@@ -27,7 +27,7 @@ Argument | What it does | Default value
 
 If no value for an argument is specified it will use the default.
 
-- `-gui=true` | gui, do not use any arguments below | `false`
+- `-gui=<boolean>` | gui, do not use any arguments below | `false`
 - `-cli=<boolean>` | command-line, must be followed up by some of the arguments below | `false`
 - `-d <path> ` | instance folder | `./`
 - `-version <gameversion> ` | game version | `1.12.2`
