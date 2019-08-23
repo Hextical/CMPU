@@ -3,123 +3,162 @@ package main
 import (
 	"log"
 
-	"github.com/andlabs/ui"
-	_ "github.com/andlabs/ui/winmanifest"
+	"github.com/gotk3/gotk3/gtk"
 )
 
-var mainwin *ui.Window
-
-// Setter for all the values in the GUI
-func setFromGUI(ipStr string, gvStr string, dpStr string, empStr string) {
-	instancePath = &ipStr
-	gameVersion = &gvStr
-	downloadPath = &dpStr
-	exportManifestPath = &empStr
-}
-
-// Annoyingly huge function, could be broken up
-func makeBasicControlsPage() ui.Control {
-
-	vbox := ui.NewVerticalBox()
-	vbox.SetPadded(true)
-
-	// All the entries contents
-	instancePathContents := ui.NewEntry()
-	gameVersionContents := ui.NewEntry()
-	downloadPathContents := ui.NewEntry()
-	exportManifestPath := ui.NewEntry()
-
-	// Default values
-	instancePathContents.SetText("./")
-	gameVersionContents.SetText("1.12.2")
-	downloadPathContents.SetText("./")
-
-	// Start button
-	buttonstart := ui.NewButton("Start")
-	buttonstart.OnClicked(func(*ui.Button) {
-		// Set values
-		setFromGUI(instancePathContents.Text(), gameVersionContents.Text(),
-			downloadPathContents.Text(), exportManifestPath.Text())
-		ui.Quit()
-	})
-
-	vbox.Append(buttonstart, false)
-
-	// Booleans begin
-	groupBools := ui.NewGroup("Booleans")
-	groupBools.SetMargined(true)
-	vbox.Append(groupBools, false)
-
-	boolsGrid := ui.NewGrid()
-	boolsGrid.SetPadded(true)
-	groupBools.SetChild(boolsGrid)
-
-	exportNewManifestBox := ui.NewCheckbox("Export manifest.json")
-	boolsGrid.Append(exportNewManifestBox, 0, 0, 1, 1, false, ui.AlignFill, false, ui.AlignFill)
-
-	exportOldManifestBox := ui.NewCheckbox("Export old.json")
-	boolsGrid.Append(exportOldManifestBox, 0, 1, 1, 1, false, ui.AlignFill, false, ui.AlignFill)
-
-	silentModeBox := ui.NewCheckbox("Silent mode")
-	boolsGrid.Append(silentModeBox, 0, 2, 1, 1, false, ui.AlignFill, false, ui.AlignFill)
-	// Booleans end
-
-	// Entries begin
-	groupEntries := ui.NewGroup("Entries")
-	groupEntries.SetMargined(true)
-	vbox.Append(groupEntries, false)
-
-	entryForm := ui.NewForm()
-	entryForm.SetPadded(true)
-	groupEntries.SetChild(entryForm)
-
-	entryForm.Append("Instance folder path", instancePathContents, false)
-	entryForm.Append("Game version", gameVersionContents, false)
-	entryForm.Append("Download folder path", downloadPathContents, false)
-
-	exportJsonButton := ui.NewButton("Open export.json file")
-	exportJsonButton.OnClicked(func(*ui.Button) {
-		filename := ui.OpenFile(mainwin)
-		exportManifestPath.SetText(filename)
-	})
-
-	entryForm.Append("Select export.json file", exportJsonButton, false)
-	entryForm.Append("export.json path", exportManifestPath, false)
-	// Entries end
-
-	return vbox
-
-}
-
-func setupUI() {
-	// Create the window with a title, 960x540 (16:9), with a menu bar (not sure what that is)
-	mainwin = ui.NewWindow("CMPU (Curse Modpack Utilities)", 960, 540, true)
-
-	// User closing
-	mainwin.OnClosing(func(*ui.Window) bool {
-		ui.Quit()
-		return true
-	})
-
-	// OS closing
-	ui.OnShouldQuit(func() bool {
-		mainwin.Destroy()
-		return true
-	})
-
-	// Literally everything
-	mainwin.SetChild(makeBasicControlsPage())
-	mainwin.SetMargined(true)
-
-	// Display it
-	mainwin.Show()
-}
-
 func launchGUI() {
+	// Initialize GTK without parsing any command line arguments.
+	gtk.Init(nil)
 
-	err := ui.Main(setupUI)
+	// Create a new toplevel window, set its title, and connect it to the
+	// "destroy" signal to exit the GTK main loop when it is destroyed.
+	win, err := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
+
 	if err != nil {
-		log.Fatal("Cannot create GUI.")
+		log.Fatal("Unable to create window:", err)
 	}
 
+	win.SetTitle("CMPU")
+
+	win.Connect("destroy", func() {
+		gtk.MainQuit()
+	})
+
+	// Create a GtkFixed widget to show in the window.
+	fixed, err := gtk.FixedNew()
+
+	if err != nil {
+		log.Fatal("Unable to create GtkFixed:", err)
+	}
+
+	/*
+		Add items to the GtkFixed
+	*/
+	// Start button
+	start, _ := gtk.ButtonNewWithLabel("Run")
+	start.SetSizeRequest(800, 25)
+	fixed.Put(start, 0, 0)
+
+	/*
+		Checkboxes
+	*/
+	exportManifestChk, _ := gtk.CheckButtonNewWithLabel("Export manifest.json")
+	fixed.Put(exportManifestChk, 5, 50)
+
+	exportOldChk, _ := gtk.CheckButtonNewWithLabel("Export old.json")
+	fixed.Put(exportOldChk, 5, 75)
+
+	silentModeChk, _ := gtk.CheckButtonNewWithLabel("Silent mode")
+	fixed.Put(silentModeChk, 5, 100)
+
+	/*
+		Entries
+	*/
+	// Instance folder
+	instanceFolderLbl, _ := gtk.LabelNew("Instance folder path: ")
+	instanceFolderTv, _ := gtk.EntryNew()
+	instanceFolderTv.SetText("./") // Default value
+	instanceFolderTv.SetSizeRequest(295, 10)
+	instanceFolderBtn, _ := gtk.FileChooserButtonNew("Instance folder path", gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+	fixed.Put(instanceFolderLbl, 5, 133)
+	fixed.Put(instanceFolderTv, 150, 125)
+	fixed.Put(instanceFolderBtn, 450, 125)
+
+	// Game version
+	gameVersionLbl, _ := gtk.LabelNew("Game version: ")
+	gameVersionTv, _ := gtk.EntryNew()
+	gameVersionTv.SetText("1.12.2") // Default value
+	gameVersionTv.SetSizeRequest(295, 10)
+	fixed.Put(gameVersionLbl, 5, 183)
+	fixed.Put(gameVersionTv, 150, 175)
+
+	// Download folder
+	downloadFolderLbl, _ := gtk.LabelNew("Download folder path: ")
+	downloadFolderTv, _ := gtk.EntryNew()
+	downloadFolderTv.SetText("./") // Default value
+	downloadFolderTv.SetSizeRequest(295, 10)
+	downloadFolderBtn, _ := gtk.FileChooserButtonNew("Download folder path", gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
+	fixed.Put(downloadFolderLbl, 5, 233)
+	fixed.Put(downloadFolderTv, 150, 225)
+	fixed.Put(downloadFolderBtn, 450, 225)
+
+	// export.json file
+	exportJsonLbl, _ := gtk.LabelNew("export.json path: ")
+	exportJsonTv, _ := gtk.EntryNew()
+	exportJsonTv.SetText("./") // Default value
+	exportJsonTv.SetSizeRequest(295, 10)
+	exportJsonBtn, _ := gtk.FileChooserButtonNew("export.json file path", gtk.FILE_CHOOSER_ACTION_OPEN)
+	fixed.Put(exportJsonLbl, 5, 283)
+	fixed.Put(exportJsonTv, 150, 275)
+	fixed.Put(exportJsonBtn, 450, 275)
+
+	// Add the GtkFixed to the window.
+	win.Add(fixed)
+
+	/*
+		Start execution
+		of program button
+		and actually do it...
+	*/
+	start.Connect("clicked", func() {
+		// Set a lot of the values
+		*exportNewManifest = exportManifestChk.GetActive()
+		*exportOldManifest = exportOldChk.GetActive()
+		*silentMode = silentModeChk.GetActive()
+
+		*instancePath, _ = instanceFolderTv.GetText()
+		gameVersionText, _ := gameVersionTv.GetText()
+		*gameVersion = gameVersionText
+		*downloadPath, _ = downloadFolderTv.GetText()
+		*exportManifestPath, _ = exportJsonTv.GetText()
+
+		// Now begin
+		log.Printf("Starting execution of program...")
+		readInstancePath()
+		useArgs()
+		checkUpdates(oldMap, newMap)
+	})
+
+	/*
+		Event handlers
+	*/
+	exportManifestChk.Connect("toggled", func() {
+		log.Printf("Export manifest.json: %t", exportManifestChk.GetActive())
+	})
+
+	exportOldChk.Connect("toggled", func() {
+		log.Printf("Export old.json: %t", exportOldChk.GetActive())
+	})
+
+	silentModeChk.Connect("toggled", func() {
+		log.Printf("Silent mode: %t", silentModeChk.GetActive())
+	})
+
+	instanceFolderBtn.Connect("file-set", func() {
+		folderPath := instanceFolderBtn.GetFilename()
+		instanceFolderTv.SetText(folderPath)
+		log.Printf("Instance folder path set to: %s", folderPath)
+	})
+
+	downloadFolderBtn.Connect("file-set", func() {
+		folderPath := downloadFolderBtn.GetFilename()
+		downloadFolderTv.SetText(folderPath)
+		log.Printf("Download folder path set to: %s", folderPath)
+	})
+
+	exportJsonBtn.Connect("file-set", func() {
+		filePath := exportJsonBtn.GetFilename()
+		exportJsonTv.SetText(filePath)
+		log.Printf("export.json file path set to: %v", filePath)
+	})
+
+	// Set the default window size.
+	win.SetDefaultSize(800, 600)
+
+	// Recursively show all widgets contained in this window.
+	win.ShowAll()
+
+	// Begin executing the GTK main loop.  This blocks until
+	// gtk.MainQuit() is run.
+	gtk.Main()
 }

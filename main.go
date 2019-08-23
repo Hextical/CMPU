@@ -51,9 +51,6 @@ func main() {
 
 	if *guiFlag {
 		launchGUI()
-		readInstancePath()
-		useArgs()
-		checkUpdates(oldMap, newMap)
 	}
 }
 
@@ -91,7 +88,7 @@ func getTime() {
 
 	if err != nil {
 		log.Println("Cannot parse current time/date.")
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	log.Printf("Current local time: %v", currentTime)
@@ -104,7 +101,7 @@ func readInstancePath() {
 	err := readInstanceFolder(*instancePath)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 }
@@ -135,7 +132,7 @@ func readInstanceFolder(path string) error {
 
 	if err != nil {
 		log.Println("Cannot read directory.")
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	for _, f := range files {
@@ -166,7 +163,7 @@ func listMods(modsFolder string) {
 
 	if err != nil {
 		log.Println("Error searching through mods folder.")
-		log.Fatal(err)
+		log.Println(err)
 	}
 
 	log.Println("Reading mods folder completed.")
@@ -196,17 +193,22 @@ func checkUpdates(oldMap map[string][]string, newMap map[string][]string) {
 
 		if value[2] != oldMap[key][2] { // (new fileID) != (old fileID)
 
-			log.Printf("Name: %v | URL: %v | ID: %v", value[0], value[1], value[2])
-			updates++
+			// Check for empty values
+			if value[0] != "" {
 
-			// Actually download the files
-			if *downloadPath != "./" {
+				log.Printf("Name: %v | URL: %v | ID: %v", value[0], value[1], value[2])
+				updates++
 
-				// Pass in the fileName and downloadUrl
-				err := DownloadFile(value[0], value[1])
+				// Actually download the files
+				if *downloadPath != "./" {
 
-				if err != nil {
-					log.Println(err)
+					// Pass in the fileName and downloadUrl
+					err := DownloadFile(value[0], value[1])
+
+					if err != nil {
+						log.Println(err)
+					}
+
 				}
 
 			}
