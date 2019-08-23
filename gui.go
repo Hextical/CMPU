@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"sync"
 
 	"github.com/gotk3/gotk3/gtk"
 )
@@ -100,6 +101,7 @@ func launchGUI() {
 		of program button
 		and actually do it...
 	*/
+	var wg sync.WaitGroup
 	start.Connect("clicked", func() {
 		// Set a lot of the values
 		*exportNewManifest = exportManifestChk.GetActive()
@@ -112,11 +114,17 @@ func launchGUI() {
 		*downloadPath, _ = downloadFolderTv.GetText()
 		*exportManifestPath, _ = exportJsonTv.GetText()
 
+		// Run stuff in seperate `thread`
 		// Now begin
 		log.Printf("Starting execution of program...")
-		readInstancePath()
-		useArgs()
-		checkUpdates(oldMap, newMap)
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			readInstancePath()
+			useArgs()
+			checkUpdates(oldMap, newMap)
+		}()
+		wg.Wait()
 	})
 
 	/*

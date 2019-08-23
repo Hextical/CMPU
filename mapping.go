@@ -6,6 +6,7 @@ import (
 )
 
 func createMaps(jarFingerprints map[int]string) {
+	externalMods = make([]string, 0)
 	createOldMap(jarFingerprints)
 	createNewMap(oldMap)
 }
