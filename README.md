@@ -34,7 +34,7 @@ If no value for an argument is specified it will use the default.
 - `-export-new=<boolean>` | if an updated manifest should be generated | `false`
 - `-export-old=<boolean>` | if an old manifest should be generated | `false`
 - `-manifest <path>` | path to export.json | `./`
-- `-download <path>` | path for downloading updates; it will create a folder if it does not exist | `./`
+- `-download <path>` | path for downloading updates; **it will create a folder if it does not exist** | `./`
 - `-s=<boolean>` | silent mode; no output for CLI | `false`
 
 `export.json`:
@@ -59,7 +59,7 @@ CMPU -help
 `
 
 ## Building
-Navigate to directory and run `go build`. Requires [jsonparser](https://github.com/buger/jsonparser) to be installed & requires [ui](https://github.com/andlabs/ui).
+Navigate to directory and run `go build`. Requires [jsonparser](https://github.com/buger/jsonparser) to be installed & requires [gotk3](https://github.com/gotk3/gotk3).
 
 ## Planned features
 - View the [projects tab](https://github.com/Hextical/CMPU/projects).
