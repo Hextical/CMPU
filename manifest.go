@@ -36,14 +36,14 @@ func readExport(exportPath string, manifestType string) {
 func readExportJSON(file []byte) ExportJSON {
 
 	paths := [][]string{
-		[]string{"MinecraftVersion"},
-		[]string{"Modloader"},
-		[]string{"ModloaderVersion"},
-		[]string{"ManifestType"},
-		[]string{"ManifestVersion"},
-		[]string{"PackName"},
-		[]string{"PackVersion"},
-		[]string{"PackAuthors"},
+		{"MinecraftVersion"},
+		{"Modloader"},
+		{"ModloaderVersion"},
+		{"ManifestType"},
+		{"ManifestVersion"},
+		{"PackName"},
+		{"PackVersion"},
+		{"PackAuthors"},
 	}
 
 	var json ExportJSON
@@ -87,7 +87,7 @@ func manifest(exportjson ExportJSON, xMap map[string][]string, manifestType stri
 		Minecraft: Minecraft{
 			Version: *gameVersion,
 			ModLoaders: []ModLoaders{
-				ModLoaders{
+				{
 					ID:      exportjson.Modloader + "-" + exportjson.ModloaderVersion,
 					Primary: true,
 				},
