@@ -1,5 +1,7 @@
 # CMPU (_Curse Modpack Utilities_)
 
+[![Go Report Card](https://goreportcard.com/badge/github.com/Hextical/CMPU)](https://goreportcard.com/report/github.com/Hextical/CMPU)
+
 **Currently a work in progress**
 
 Please report any issues to the issues tab with a log of what commands were used and the output. 
@@ -29,8 +31,8 @@ If no value for an argument is specified it will use the default.
 
 - `-gui=<boolean>` | gui, do not use any arguments below | `false`
 - `-cli=<boolean>` | command-line, must be followed up by some of the arguments below | `false`
-- `-d <path> ` | instance folder | `./`
-- `-version <gameversion> ` | game version | `1.12.2`
+- `-d <path>` | instance folder | `./`
+- `-version <gameversion>` | game version | `1.12.2`
 - `-export-new=<boolean>` | if an updated manifest should be generated | `false`
 - `-export-old=<boolean>` | if an old manifest should be generated | `false`
 - `-manifest <path>` | path to export.json | `./`

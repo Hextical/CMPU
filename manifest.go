@@ -9,11 +9,11 @@ import (
 	"github.com/buger/jsonparser"
 )
 
-func readExport(EXPORT_PATH string, manifestType string) {
+func readExport(exportPath string, manifestType string) {
 
 	log.Println("Reading export.json...")
 
-	export, err := ioutil.ReadFile(EXPORT_PATH)
+	export, err := ioutil.ReadFile(exportPath)
 
 	if err != nil {
 		log.Println(err)
@@ -73,11 +73,11 @@ func readExportJSON(file []byte) ExportJSON {
 
 }
 
-func manifest(exportjson ExportJSON, x_map map[string][]string, manifestType string) {
+func manifest(exportjson ExportJSON, xMap map[string][]string, manifestType string) {
 
 	var moddedFiles []CurrFile
 
-	for key, value := range x_map {
+	for key, value := range xMap {
 		keyInt, _ := strconv.Atoi(key)
 		valueInt, _ := strconv.Atoi(value[2])
 		moddedFiles = append(moddedFiles, CurrFile{keyInt, valueInt, true})
@@ -88,7 +88,7 @@ func manifest(exportjson ExportJSON, x_map map[string][]string, manifestType str
 			Version: *gameVersion,
 			ModLoaders: []ModLoaders{
 				ModLoaders{
-					Id:      exportjson.Modloader + "-" + exportjson.ModloaderVersion,
+					ID:      exportjson.Modloader + "-" + exportjson.ModloaderVersion,
 					Primary: true,
 				},
 			},

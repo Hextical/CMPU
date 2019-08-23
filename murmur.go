@@ -36,16 +36,17 @@ import (
 	"github.com/aviddiviner/go-murmur"
 )
 
-func GetByteArrayHash(bytes []byte) int {
+func getByteArrayHash(bytes []byte) int {
 	return int(murmur.MurmurHash2(computeNormalizedArray(bytes), 1))
 }
 
+// GetFileHash gets the 32-bit MurmurHash2 of a file
 func GetFileHash(file string) (int, error) {
 	bytes, err := ioutil.ReadFile(file)
 	if err != nil {
 		return 0, err
 	}
-	result := GetByteArrayHash(bytes)
+	result := getByteArrayHash(bytes)
 	return result, nil
 }
 

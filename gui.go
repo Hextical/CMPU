@@ -84,22 +84,22 @@ func launchGUI() {
 	fixed.Put(downloadFolderBtn, 450, 225)
 
 	// export.json file
-	exportJsonLbl, _ := gtk.LabelNew("export.json path: ")
-	exportJsonTv, _ := gtk.EntryNew()
-	exportJsonTv.SetText("./") // Default value
-	exportJsonTv.SetSizeRequest(295, 10)
-	exportJsonBtn, _ := gtk.FileChooserButtonNew("export.json file path", gtk.FILE_CHOOSER_ACTION_OPEN)
-	fixed.Put(exportJsonLbl, 5, 283)
-	fixed.Put(exportJsonTv, 150, 275)
-	fixed.Put(exportJsonBtn, 450, 275)
+	exportJSONLbl, _ := gtk.LabelNew("export.json path: ")
+	exportJSONTv, _ := gtk.EntryNew()
+	exportJSONTv.SetText("./") // Default value
+	exportJSONTv.SetSizeRequest(295, 10)
+	exportJSONBtn, _ := gtk.FileChooserButtonNew("export.json file path", gtk.FILE_CHOOSER_ACTION_OPEN)
+	fixed.Put(exportJSONLbl, 5, 283)
+	fixed.Put(exportJSONTv, 150, 275)
+	fixed.Put(exportJSONBtn, 450, 275)
 
 	// Add the GtkFixed to the window.
 	win.Add(fixed)
 
 	/*
-		Start execution
-		of program button
-		and actually do it...
+	   Start execution
+	   of program button
+	   and actually do it...
 	*/
 	var wg sync.WaitGroup
 	start.Connect("clicked", func() {
@@ -112,18 +112,18 @@ func launchGUI() {
 		gameVersionText, _ := gameVersionTv.GetText()
 		*gameVersion = gameVersionText
 		*downloadPath, _ = downloadFolderTv.GetText()
-		*exportManifestPath, _ = exportJsonTv.GetText()
+		*exportManifestPath, _ = exportJSONTv.GetText()
 
-		// Run stuff in seperate `thread`
+		// Run stuff in separate `thread`
 		// Now begin
 		log.Printf("Starting execution of program...")
 		wg.Add(1)
-		go func() {
+		go func(wg *sync.WaitGroup) {
 			defer wg.Done()
 			readInstancePath()
 			useArgs()
 			checkUpdates(oldMap, newMap)
-		}()
+		}(&wg)
 		wg.Wait()
 	})
 
@@ -154,9 +154,9 @@ func launchGUI() {
 		log.Printf("Download folder path set to: %s", folderPath)
 	})
 
-	exportJsonBtn.Connect("file-set", func() {
-		filePath := exportJsonBtn.GetFilename()
-		exportJsonTv.SetText(filePath)
+	exportJSONBtn.Connect("file-set", func() {
+		filePath := exportJSONBtn.GetFilename()
+		exportJSONTv.SetText(filePath)
 		log.Printf("export.json file path set to: %v", filePath)
 	})
 

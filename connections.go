@@ -40,7 +40,12 @@ func connectWithProjectID(projectID string) []byte {
 	return readResponse(resp, err)
 }
 
-// Source: https://golangcode.com/download-a-file-from-a-url/
+/*
+	Source: https://golangcode.com/download-a-file-from-a-url/
+*/
+
+// DownloadFile will download a url to a local file. It's efficient because it will
+// write as it downloads and not load the whole file into memory.
 func DownloadFile(fileName string, url string) error {
 
 	// Get the data

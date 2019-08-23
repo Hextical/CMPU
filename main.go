@@ -83,8 +83,8 @@ func getTime() {
 
 	var err error
 
-	currentTime_str := time.Now().Format(time.RFC3339Nano)
-	currentTime, err = time.Parse(time.RFC3339Nano, currentTime_str)
+	currentTimeStr := time.Now().Format(time.RFC3339Nano)
+	currentTime, err = time.Parse(time.RFC3339Nano, currentTimeStr)
 
 	if err != nil {
 		log.Println("Cannot parse current time/date.")
@@ -143,7 +143,7 @@ func readInstanceFolder(path string) error {
 		}
 	}
 
-	return errors.New("Cannot find mods folder.")
+	return errors.New("cannot find mods folder")
 
 }
 

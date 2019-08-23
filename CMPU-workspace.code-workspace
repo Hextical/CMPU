@@ -8,9 +8,13 @@
 		"files.autoSave": "afterDelay",
 		"files.autoSaveDelay": 1000,
 		"workbench.colorTheme": "Dracula",
-		"go.lintTool": "golangci-lint",
+		"go.lintTool": "golint",
 		"go.autocompleteUnimportedPackages": true,
 		"go.useCodeSnippetsOnFunctionSuggestWithoutType": true,
 		"go.lintOnSave": "workspace",
+		"go.formatTool": "gofmt",
+		"go.formatFlags": [
+			"-s"
+		  ],
 	}
 }

@@ -11,10 +11,10 @@ import (
 func parseOldJSON(body []byte) (string, []string) {
 
 	paths := [][]string{
-		[]string{"id"},                  // projectID
-		[]string{"file", "fileName"},    // fileName
-		[]string{"file", "downloadUrl"}, // downloadURL
-		[]string{"file", "id"},          // fileID
+		{"id"},                  // projectID
+		{"file", "fileName"},    // fileName
+		{"file", "downloadUrl"}, // downloadURL
+		{"file", "id"},          // fileID
 	}
 
 	// Check if the mod was found on CurseForge
@@ -55,9 +55,9 @@ func parseOldJSON(body []byte) (string, []string) {
 func parseNewJSON(file []byte) []string {
 
 	paths := [][]string{
-		[]string{"fileName"},    // fileName
-		[]string{"downloadUrl"}, // downloadURL
-		[]string{"id"},          // fileID
+		{"fileName"},    // fileName
+		{"downloadUrl"}, // downloadURL
+		{"id"},          // fileID
 	}
 
 	var fileName, downloadURL, fileID string
@@ -112,9 +112,9 @@ func findBestFile(body []byte) []byte {
 		// Determine if the object needs to be checked, if it does then it is parsed
 		if currentVersionExists(versions) {
 
-			fileDate_str, _ := jsonparser.GetString(file, "fileDate")
-			fileDate_RFC3339Nano, _ := time.Parse(time.RFC3339Nano, fileDate_str)
-			difference := currentTime.Sub(fileDate_RFC3339Nano).Minutes()
+			fileDateStr, _ := jsonparser.GetString(file, "fileDate")
+			fileDateRFC3339Nano, _ := time.Parse(time.RFC3339Nano, fileDateStr)
+			difference := currentTime.Sub(fileDateRFC3339Nano).Minutes()
 
 			if difference < lowestDifference {
 				lowestDifference = difference
