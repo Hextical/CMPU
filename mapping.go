@@ -65,10 +65,18 @@ func createNewMap(oldMap map[string][]string) {
 				externalMods = append(externalMods, value[0])
 				mutex.Unlock()
 			} else {
-				attributes := parseNewJSON(findBestFile(tempBody))
-				mutex.Lock()
-				newMap[key] = attributes
-				mutex.Unlock()
+				// This is for the release types
+				// 1 = Release, 2 = Beta, 3 = Alpha (i)
+				for i := 1; i <= 3; i++ {
+					bestFile := findBestFile(tempBody, i)
+					if string(bestFile) != "" {
+						attributes := parseNewJSON(bestFile)
+						mutex.Lock()
+						newMap[key] = attributes
+						mutex.Unlock()
+						break
+					}
+				}
 			}
 		}(&wg, key, value)
 	}

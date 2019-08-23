@@ -73,15 +73,23 @@ func launchGUI() {
 	fixed.Put(gameVersionLbl, 5, 183)
 	fixed.Put(gameVersionTv, 150, 175)
 
+	// Release type
+	releaseTypeLbl, _ := gtk.LabelNew("Release type: ")
+	releaseTypeTv, _ := gtk.EntryNew()
+	releaseTypeTv.SetText("stable") // Default value
+	releaseTypeTv.SetSizeRequest(295, 10)
+	fixed.Put(releaseTypeLbl, 5, 233)
+	fixed.Put(releaseTypeTv, 150, 225)
+
 	// Download folder
 	downloadFolderLbl, _ := gtk.LabelNew("Download folder path: ")
 	downloadFolderTv, _ := gtk.EntryNew()
 	downloadFolderTv.SetText("./") // Default value
 	downloadFolderTv.SetSizeRequest(295, 10)
 	downloadFolderBtn, _ := gtk.FileChooserButtonNew("Download folder path", gtk.FILE_CHOOSER_ACTION_SELECT_FOLDER)
-	fixed.Put(downloadFolderLbl, 5, 233)
-	fixed.Put(downloadFolderTv, 150, 225)
-	fixed.Put(downloadFolderBtn, 450, 225)
+	fixed.Put(downloadFolderLbl, 5, 283)
+	fixed.Put(downloadFolderTv, 150, 275)
+	fixed.Put(downloadFolderBtn, 450, 275)
 
 	// export.json file
 	exportJSONLbl, _ := gtk.LabelNew("export.json path: ")
@@ -89,9 +97,9 @@ func launchGUI() {
 	exportJSONTv.SetText("./") // Default value
 	exportJSONTv.SetSizeRequest(295, 10)
 	exportJSONBtn, _ := gtk.FileChooserButtonNew("export.json file path", gtk.FILE_CHOOSER_ACTION_OPEN)
-	fixed.Put(exportJSONLbl, 5, 283)
-	fixed.Put(exportJSONTv, 150, 275)
-	fixed.Put(exportJSONBtn, 450, 275)
+	fixed.Put(exportJSONLbl, 5, 333)
+	fixed.Put(exportJSONTv, 150, 325)
+	fixed.Put(exportJSONBtn, 450, 325)
 
 	// Add the GtkFixed to the window.
 	win.Add(fixed)
@@ -111,6 +119,8 @@ func launchGUI() {
 		*instancePath, _ = instanceFolderTv.GetText()
 		gameVersionText, _ := gameVersionTv.GetText()
 		*gameVersion = gameVersionText
+		releaseTypeText, _ := releaseTypeTv.GetText()
+		*releaseType = releaseTypeText
 		*downloadPath, _ = downloadFolderTv.GetText()
 		*exportManifestPath, _ = exportJSONTv.GetText()
 

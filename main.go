@@ -29,6 +29,7 @@ var (
 var (
 	instancePath       *string // Path to instance folder
 	gameVersion        *string // Specified game version
+	releaseType        *string // File release type
 	downloadPath       *string // Path for new .jar files
 	exportNewManifest  *bool   // Export manifest.json
 	exportOldManifest  *bool   // Export oldmanifest.json
@@ -62,6 +63,7 @@ func parseArgs() {
 
 	instancePath = flag.String("d", "./", "Absolute path to Minecraft instance folder.")
 	gameVersion = flag.String("version", "1.12.2", "Game version of located mods.")
+	releaseType = flag.String("release", "stable", "Release type of file to check for.")
 	downloadPath = flag.String("download", "./", "Path of where to download .jar file")
 
 	exportNewManifest = flag.Bool("export-new", false, "Creation of new manifest.json")

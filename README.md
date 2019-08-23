@@ -25,7 +25,7 @@ turns into
 
 Explanation:
 
-Argument | What it does | Default value
+Argument | What it does | Default value | Options | Extra info
 
 If no value for an argument is specified it will use the default.
 
@@ -33,6 +33,7 @@ If no value for an argument is specified it will use the default.
 - `-cli=<boolean>` | command-line, must be followed up by some of the arguments below | `false`
 - `-d <path>` | instance folder | `./`
 - `-version <gameversion>` | game version | `1.12.2`
+- `-release <string>` | release type | `stable` | options: stable, latest | must be lowercase & any misspelling = latest
 - `-export-new=<boolean>` | if an updated manifest should be generated | `false`
 - `-export-old=<boolean>` | if an old manifest should be generated | `false`
 - `-manifest <path>` | path to export.json | `./`

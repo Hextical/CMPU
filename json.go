@@ -78,10 +78,9 @@ func parseNewJSON(file []byte) []string {
 
 }
 
-// currentVersionExists returns the existence of (USER_VERSION) within the
-// (versions) array.
+// filterGameVersion filters the versions based on the user's specification.
 // Useful for findBestFile in filtering out unnecessary objects.
-func currentVersionExists(versions []string) bool {
+func filterGameVersion(versions []string) bool {
 	for i := range versions {
 		if versions[i] == *gameVersion {
 			return true
@@ -90,12 +89,41 @@ func currentVersionExists(versions []string) bool {
 	return false
 }
 
-func findBestFile(body []byte) []byte {
+// filterReleaseType filters the file type based on the user's specification
+// and returns if the specification exists within that file.
+func filterReleaseType(file []byte, releaseIteration int) bool {
+
+	// Don't check anything if it's latest
+	if *releaseType == "latest" {
+		return true
+	}
+
+	// Grab releaseType from file
+	releaseKey, err := jsonparser.GetInt(file, "releaseType")
+
+	if err != nil {
+		log.Println("Unable to find releaseType", err)
+	}
+
+	if *releaseType == "stable" {
+		// 1 = release, 2 = beta, 3 = alpha
+		if int(releaseKey) == releaseIteration {
+			return true
+		}
+		return false
+	}
+
+	// Not supposed to get here, but let's just return the latest
+	return true
+
+}
+
+func findBestFile(body []byte, releaseIteration int) []byte {
 
 	lowestDifference := math.MaxFloat64 // Lowest difference so far
 	var searchedFile []byte             // File object found so far
 
-	// Traverse array
+	// Traverse array of files
 	_, err := jsonparser.ArrayEach(body, func(file []byte, dataType jsonparser.ValueType, offset int, err error) {
 
 		var versions []string // Versions found within object
@@ -109,16 +137,21 @@ func findBestFile(body []byte) []byte {
 			log.Println("gameVersion array does not exist.")
 		}
 
-		// Determine if the object needs to be checked, if it does then it is parsed
-		if currentVersionExists(versions) {
+		// Determine if the object needs to be checked
+		if filterGameVersion(versions) {
+			// Store an old temp variable of the current file
 
-			fileDateStr, _ := jsonparser.GetString(file, "fileDate")
-			fileDateRFC3339Nano, _ := time.Parse(time.RFC3339Nano, fileDateStr)
-			difference := currentTime.Sub(fileDateRFC3339Nano).Minutes()
+			if filterReleaseType(file, releaseIteration) {
 
-			if difference < lowestDifference {
-				lowestDifference = difference
-				searchedFile = file
+				fileDateStr, _ := jsonparser.GetString(file, "fileDate")
+				fileDateRFC3339Nano, _ := time.Parse(time.RFC3339Nano, fileDateStr)
+				difference := currentTime.Sub(fileDateRFC3339Nano).Minutes()
+
+				if difference < lowestDifference {
+					lowestDifference = difference
+					searchedFile = file
+				}
+
 			}
 
 		}
