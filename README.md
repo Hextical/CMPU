@@ -29,9 +29,9 @@ Argument | What it does | Default value | Options | Extra info
 
 If no value for an argument is specified it will use the default.
 
-- `-gui=<boolean>` | gui, do not use any arguments below | `false`
-- `-cli=<boolean>` | command-line, must be followed up by some of the arguments below | `false`
-- `-d <path>` | instance folder | `./`
+- `-gui=<boolean>` | graphics user interface, if specified do not use any arguments below | `false`
+- `-cli=<boolean>` | command line interface, must be followed up by some of the arguments below | `false`
+- `-d <path>` | instance folder path | `./`
 - `-version <gameversion>` | game version | `1.12.2`
 - `-release <string>` | release type | `stable` | options: stable, latest | must be lowercase & any misspelling = latest
 - `-export-new=<boolean>` | if an updated manifest should be generated | `false`
@@ -62,7 +62,7 @@ CMPU -help
 `
 
 ## Building
-Navigate to directory and run `go build`. Requires [jsonparser](https://github.com/buger/jsonparser) to be installed & requires [gotk3](https://github.com/gotk3/gotk3).
+Navigate to directory and run `go build`. Requires [jsonparser](https://github.com/buger/jsonparser), [gotk3](https://github.com/gotk3/gotk3), and [go-murmur](https://github.com/aviddiviner/go-murmur).
 
 ## Planned features
 - View the [projects tab](https://github.com/Hextical/CMPU/projects).

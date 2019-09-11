@@ -75,11 +75,13 @@ func launchGUI() {
 
 	// Release type
 	releaseTypeLbl, _ := gtk.LabelNew("Release type: ")
-	releaseTypeTv, _ := gtk.EntryNew()
-	releaseTypeTv.SetText("stable") // Default value
-	releaseTypeTv.SetSizeRequest(295, 10)
+	releaseTypeComboBox, _ := gtk.ComboBoxTextNew()
+	releaseTypeComboBox.AppendText("stable")
+	releaseTypeComboBox.AppendText("latest")
+	releaseTypeComboBox.SetActive(0) // Default value
+	releaseTypeComboBox.SetSizeRequest(295, 10)
 	fixed.Put(releaseTypeLbl, 5, 233)
-	fixed.Put(releaseTypeTv, 150, 225)
+	fixed.Put(releaseTypeComboBox, 150, 225)
 
 	// Download folder
 	downloadFolderLbl, _ := gtk.LabelNew("Download folder path: ")
@@ -119,8 +121,7 @@ func launchGUI() {
 		*instancePath, _ = instanceFolderTv.GetText()
 		gameVersionText, _ := gameVersionTv.GetText()
 		*gameVersion = gameVersionText
-		releaseTypeText, _ := releaseTypeTv.GetText()
-		*releaseType = releaseTypeText
+		*releaseType = releaseTypeComboBox.GetActiveText()
 		*downloadPath, _ = downloadFolderTv.GetText()
 		*exportManifestPath, _ = exportJSONTv.GetText()
 
@@ -134,7 +135,7 @@ func launchGUI() {
 			useArgs()
 			checkUpdates(oldMap, newMap)
 		}(&wg)
-		wg.Wait()
+		wg.Wait() // Lock until complete
 	})
 
 	/*
