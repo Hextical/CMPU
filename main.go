@@ -156,7 +156,11 @@ func listMods(modsFolder string) {
 	jarFingerprints = make(map[int]string)
 
 	err := filepath.Walk(path.Join(modsFolder, "mods"), func(path string, info os.FileInfo, err error) error {
-		if filepath.Ext(info.Name()) == ".jar" {
+		// Skip subdirectories, this ignores unnecessary folders such as: [1.12.2, memory_repo]
+		if info.IsDir() && info.Name() != "mods" {
+			return filepath.SkipDir
+		}
+		if filepath.Ext(path) == ".jar" {
 			fileHash, _ := GetFileHash(path)
 			jarFingerprints[fileHash] = info.Name()
 		}

@@ -7,7 +7,6 @@
 	"settings": {
 		"files.autoSave": "afterDelay",
 		"files.autoSaveDelay": 1000,
-		"workbench.colorTheme": "Dracula",
 		"go.lintTool": "golint",
 		"go.autocompleteUnimportedPackages": true,
 		"go.useCodeSnippetsOnFunctionSuggestWithoutType": true,
